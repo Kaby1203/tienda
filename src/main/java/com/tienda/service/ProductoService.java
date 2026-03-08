@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.math.BigDecimal; 
 
 @Service
 public class ProductoService {
 
     private final ProductoRepository productoRepository;
-    private final FirebaseStorageService firebaseStorageService;  // ← AGREGADO
+    private final FirebaseStorageService firebaseStorageService;
 
-    // Constructor modificado para incluir FirebaseStorageService
     public ProductoService(ProductoRepository productoRepository,
             FirebaseStorageService firebaseStorageService) {
         this.productoRepository = productoRepository;
@@ -38,18 +38,18 @@ public class ProductoService {
 
     @Transactional
     public void save(Producto producto, MultipartFile imagenFile) {
-        System.out.println("=== GUARDANDO CATEGORÍA CON FIREBASE ===");
+        System.out.println("=== GUARDANDO PRODUCTO CON FIREBASE ===");
 
-        // 1. Primero guardamos la categoría para obtener el ID
+       
         producto = productoRepository.save(producto);
-        System.out.println("Categoría guardada en BD con ID: " + producto.getIdProducto());
+        System.out.println("Producto guardado en BD con ID: " + producto.getIdProducto());
 
-        // 2. Si hay imagen, la subimos a Firebase
+       
         if (imagenFile != null && !imagenFile.isEmpty()) {
             try {
-                System.out.println("Subiendo imagen a Firebase para categoría ID: " + producto.getIdProducto());
+                System.out.println("Subiendo imagen a Firebase para producto ID: " + producto.getIdProducto());
 
-                // Subir a Firebase usando el servicio
+           
                 String rutaImagen = firebaseStorageService.uploadImage(
                         imagenFile,
                         "producto",
@@ -58,10 +58,10 @@ public class ProductoService {
 
                 System.out.println("Imagen subida a Firebase. URL: " + rutaImagen);
 
-                // 3. Actualizar la categoría con la URL de Firebase
+           
                 producto.setRutaImagen(rutaImagen);
                 productoRepository.save(producto);
-                System.out.println("Categoría actualizada con URL de Firebase");
+                System.out.println("Producto actualizado con URL de Firebase");
 
             } catch (IOException e) {
                 System.err.println("ERROR al subir imagen a Firebase: " + e.getMessage());
@@ -69,33 +69,50 @@ public class ProductoService {
                 throw new RuntimeException("Error al subir la imagen a Firebase", e);
             }
         } else {
-            System.out.println("No se recibió imagen para esta categoría");
+            System.out.println("No se recibió imagen para este producto");
         }
 
-        System.out.println("=== FIN GUARDADO CATEGORÍA ===\n");
+        System.out.println("=== FIN GUARDADO PRODUCTO ===\n");
     }
 
     @Transactional
     public void delete(Integer idProducto) {
-        System.out.println("=== ELIMINANDO CATEGORÍA ID: " + idProducto + " ===");
+        System.out.println("=== ELIMINANDO PRODUCTO ID: " + idProducto + " ===");
 
         Optional<Producto> productoOpt = productoRepository.findById(idProducto);
 
         if (productoOpt.isPresent()) {
             Producto producto = productoOpt.get();
 
-            // Opcional: Eliminar la imagen de Firebase si existe
+        
             if (producto.getRutaImagen() != null && !producto.getRutaImagen().isEmpty()) {
-                System.out.println("La categoría tenía imagen: " + producto.getRutaImagen());
-                // Aquí podrías agregar lógica para eliminar de Firebase si lo deseas
+                System.out.println("El producto tenía imagen: " + producto.getRutaImagen());
+  
             }
 
             productoRepository.deleteById(idProducto);
-            System.out.println("Categoría eliminada de BD");
+            System.out.println("Producto eliminado de BD");
         } else {
-            throw new IllegalArgumentException("La categoría con ID " + idProducto + " no existe.");
+            throw new IllegalArgumentException("El producto con ID " + idProducto + " no existe.");
         }
 
         System.out.println("=== FIN ELIMINACIÓN ===\n");
     }
+    
+    @Transactional(readOnly = true)
+    public List<Producto> consultaDerivada(BigDecimal precioInf, BigDecimal precioSup) {
+        return productoRepository.findByPrecioBetweenOrderByPrecioAsc(precioInf, precioSup);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<Producto> consultaJPQL(BigDecimal precioInf, BigDecimal precioSup) {
+        return productoRepository.consultaJPQL(precioInf, precioSup);
+    }
+    
+     @Transactional(readOnly = true)
+    public List<Producto> consultaSQL(BigDecimal precioInf, BigDecimal precioSup) {
+        return productoRepository.consultaSQL(precioInf, precioSup);
+    }
+    
+    
 }
