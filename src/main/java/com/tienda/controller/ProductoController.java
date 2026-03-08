@@ -1,6 +1,7 @@
 package com.tienda.controller;
 
 import com.tienda.domain.Producto;
+import com.tienda.service.CategoriaService;
 import com.tienda.service.ProductoService;
 import jakarta.validation.Valid;
 import java.util.Locale;
@@ -21,10 +22,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ProductoController {
 
     private final ProductoService productoService;
+    private final CategoriaService categoriaService;
     private final MessageSource messageSource;
 
-    public ProductoController(ProductoService productoService, MessageSource messageSource) {
+    public ProductoController(ProductoService productoService, CategoriaService categoriaService, MessageSource messageSource) {
         this.productoService = productoService;
+        this.categoriaService = categoriaService;
         this.messageSource = messageSource;
     }
 
@@ -32,6 +35,8 @@ public class ProductoController {
     public String listado(Model model) {
         var productos = productoService.getProductos(false);
         model.addAttribute("productos", productos);
+        var categorias = categoriaService.getCategorias(true);
+        model.addAttribute("categorias", categorias);
         model.addAttribute("totalProductos", productos.size());
         return "/producto/listado";
     }
@@ -73,6 +78,8 @@ public class ProductoController {
             return "redirect:/producto/listado";
         }
         model.addAttribute("producto", productoOpt.get());
+        var categorias = categoriaService.getCategorias(true);
+        model.addAttribute("categorias", categorias);
         return "/producto/modifica";
     }
 }
