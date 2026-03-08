@@ -2,9 +2,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
-    <head th:replace="~{general/fragmentos :: head}"/>
-    <body>
-      <header th:replace="~{general/fragmentos :: header}"/>
-      <footer th:replace="~{general/fragmentos :: footer}"/>
-    </body>
+<head th:replace="~{general/fragmentos :: head}"/>
+<body>
+    <header th:replace="~{general/fragmentos :: header}"/>
+
+    <!-- TABS DE CATEGORÍAS (Recorte 003) -->
+    <section th:replace="~{producto/fragmentos :: tabs}"/>
+
+    <!-- TARJETAS DE PRODUCTOS (Recorte 003) -->
+    <section th:replace="~{producto/fragmentos :: tarjetas}"/>
+
+    <footer th:replace="~{general/fragmentos :: footer}"/>
+    
+    <!-- Toast para mensajes -->
+    <section th:replace="~{general/fragmentos :: mostrarToast}"/>
+</body>
 </html>
