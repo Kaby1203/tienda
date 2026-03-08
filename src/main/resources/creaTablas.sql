@@ -201,3 +201,4 @@ SELECT 'DATOS CARGADOS CORRECTAMENTE EN AIVEN' AS 'MENSAJE';
 SELECT COUNT(*) as 'Total Categorías' FROM categoria;
 SELECT COUNT(*) as 'Total Productos' FROM producto;
 SELECT COUNT(*) as 'Total Usuarios' FROM usuario;
+
