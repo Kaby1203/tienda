@@ -46,7 +46,7 @@ public class ConsultaController {
         return "/consultas/listado";
     }
     
-    // CAMBIO 1: Cambiar la ruta de "/consultaDerivada" a "/derivadas"
+
     @PostMapping("/derivadas")  
     public String consultaDerivada(@RequestParam BigDecimal precioInf,
         @RequestParam BigDecimal precioSup, Model model) {
@@ -57,7 +57,7 @@ public class ConsultaController {
         return "/consultas/listado";
     }
     
-    // CAMBIO 2: Cambiar la ruta de "/consultaJPQL" a "/jpql"
+
     @PostMapping("/jpql")  
     public String consultaJPQL(@RequestParam BigDecimal precioInf,
         @RequestParam BigDecimal precioSup, Model model) {
@@ -68,7 +68,7 @@ public class ConsultaController {
         return "/consultas/listado";
     }
     
-    // CAMBIO 3: Cambiar la ruta de "/consultaSQL" a "/sql"
+
     @PostMapping("/sql") 
     public String consultaSQL(@RequestParam BigDecimal precioInf,
         @RequestParam BigDecimal precioSup, Model model) {
@@ -78,4 +78,12 @@ public class ConsultaController {
         model.addAttribute("precioSup", precioSup);
         return "/consultas/listado";
     }
+    
+@PostMapping("/consultaNombre")
+public String consultaPorNombre(@RequestParam String nombre, Model model) {
+    var productos = productoService.consultaPorNombreJPQL(nombre);
+    model.addAttribute("productos", productos);
+    model.addAttribute("nombre", nombre);
+    return "/consultas/listado";
+}
 }

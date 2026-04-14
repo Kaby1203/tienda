@@ -57,11 +57,12 @@
 
 
 <!-- Fragmento #3  -->
+
 <section th:fragment="consultas" class="row row-cols-4 p-2">
     <div th:replace="~{consultas/fragmentos :: formConsulta('primary', #{consultas.derivadas}, '/consultas/derivadas')}"></div>
     <div th:replace="~{consultas/fragmentos :: formConsulta('warning', #{consultas.jpql}, '/consultas/jpql')}"></div>
     <div th:replace="~{consultas/fragmentos :: formConsulta('success', #{consultas.sql}, '/consultas/sql')}"></div>
-    <div class="card"><p>Acá va su Práctica #2</p></div>
+    <div th:replace="~{consultas/fragmentos :: formConsultaNombre('dark', 'Práctica #2', '/consultas/consultaNombre')}"></div>
 </section>
 
 <!-- Fragmento #4  -->
@@ -90,3 +91,24 @@
     </form>
 </div>
 
+<!-- Fragmento #5 - ConsultaNombre para Práctica #2 -->
+<div th:fragment="formConsultaNombre(colorForm, textoForm, urlForm)">
+    <form method="post" th:action="@{${urlForm}}" class="was-validated">
+        <div class="card p-2">
+            <div class="card-header text-center text-white" th:classappend="${'bg-' + colorForm}">
+                <h5>[[${textoForm}]]</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label>Nombre del Producto</label>
+                    <input type="text" name="nombre" th:value="${nombre}" class="form-control" placeholder="Ej: Xiaomi 14" required/>
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <button type="submit" class="btn text-white" th:classappend="${'btn-' + colorForm}">
+                    <i class="fas fa-solid fa-magnifying-glass"></i> Consultar Nombre
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

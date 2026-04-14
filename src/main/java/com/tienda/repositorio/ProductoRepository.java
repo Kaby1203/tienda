@@ -28,4 +28,17 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     value="SELECT * FROM producto WHERE precio BETWEEN :precioInf AND :precioSup ORDER BY precio ASC")
     public List<Producto> consultaSQL(@Param("precioInf") BigDecimal precioInf, 
     @Param("precioSup") BigDecimal precioSup);
+    
+// Consulta derivada - buscar por nombre
+public List<Producto> findByDescripcionContainingIgnoreCaseOrderByDescripcionAsc(String descripcion);
+
+// Consulta JPQL
+@Query("SELECT p FROM Producto p WHERE UPPER(p.descripcion) LIKE UPPER(CONCAT('%', :nombre, '%')) ORDER BY p.descripcion ASC")
+public List<Producto> consultaPorNombreJPQL(@Param("nombre") String nombre);
+
+// Consulta SQL nativa
+@Query(nativeQuery = true, 
+       value = "SELECT * FROM producto WHERE UPPER(descripcion) LIKE UPPER(CONCAT('%', :nombre, '%')) ORDER BY descripcion ASC")
+public List<Producto> consultaPorNombreSQL(@Param("nombre") String nombre);
+
 }

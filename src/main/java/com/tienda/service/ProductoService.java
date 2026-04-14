@@ -114,5 +114,21 @@ public class ProductoService {
         return productoRepository.consultaSQL(precioInf, precioSup);
     }
     
+
+@Transactional(readOnly = true)
+public List<Producto> consultaPorNombreDerivada(String nombre) {
+    return productoRepository.findByDescripcionContainingIgnoreCaseOrderByDescripcionAsc(nombre);
+}
+
+@Transactional(readOnly = true)
+public List<Producto> consultaPorNombreJPQL(String nombre) {
+    return productoRepository.consultaPorNombreJPQL(nombre);
+}
+
+@Transactional(readOnly = true)
+public List<Producto> consultaPorNombreSQL(String nombre) {
+    return productoRepository.consultaPorNombreSQL(nombre);
+}
+    
     
 }

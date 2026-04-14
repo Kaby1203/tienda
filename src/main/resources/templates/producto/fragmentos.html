@@ -4,7 +4,8 @@
     <div class='row py-4 mb-2 bg-light'>
         <div class='col-md-1'></div>
         <div class='col-md-3'>
-            <button type="button" class="btn btn-primary"
+            <button type="button" class="btn btn-primary" 
+                    sec:authorize="hasRole('ROLE_ADMIN')"
                     data-bs-toggle="modal" data-bs-target="#agregarProductoModal">
                 <i class="fa-solid fa-plus"></i> [[#{producto.agregar}]]</button>
         </div>
@@ -101,7 +102,7 @@
                                     <td><img th:src="@{${p.rutaImagen}}" alt="noData" height="75"/></td>
                                     <td>[[${p.categoria.descripcion}]]</td>
                                     <td th:text="${p.activo} ? 'Activa':'Inactiva'"></td>
-                                    <td>
+                                    <td sec:authorize="hasRole('ROLE_ADMIN')">
                                         <button type="button" class="btn btn-danger"
                                                 data-bs-toggle="modal" data-bs-target="#confirmModal"
                                                 th:data-bs-id="${p.idProducto}"
