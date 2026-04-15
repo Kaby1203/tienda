@@ -153,4 +153,28 @@ public class UsuarioService {
         usuario.getRoles().add(rol);
         return usuarioRepository.save(usuario);
     }
+    //Sección para gestionar roles a usuarios...
+    
+    @Transactional(readOnly = true)
+    public List<String> getRolesNombres() {
+        // Retorna una lista de Strings con el nombre de cada rol
+        return rolRepository.findAll().stream()
+                .map(Rol::getRol)
+                .toList();
+    }
+
+    @Transactional
+    public Usuario eliminarRol(String username, Integer idRol) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
+        if (usuarioOpt.isEmpty()) {
+            throw new RuntimeException("Usuario no encontrado: " + username);
+        }
+        Usuario usuario = usuarioOpt.get();
+
+        // Filtra la colección de roles del usuario para mantener solo los que NO coinciden con idRol
+        usuario.getRoles().removeIf(rol -> rol.getIdRol().equals(idRol));
+
+        // Guarda el usuario con la colección de roles modificada
+        return usuarioRepository.save(usuario);
+    }
 }
